@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+**/.DS_Store
+**/*.log
+.grunt_pid
+node_modules/*
