@@ -1,0 +1,21 @@
+extends template
+
+block cssSheets
+	link(rel='stylesheet', href='/stylesheets/login.css')
+
+block content
+	script(src='/js/script.js')
+	.outerBox
+	form.register-form#register-form
+		.inputs
+			.input-row
+				.input-box
+					text.field-labeled Email
+					input.text-input(type='text' name='email' placeholder='firstlast@mail.com')
+				.input-box
+					text.field-labeled Password
+					input.text-input(type='password' name='password' placeholder='********' maxLength='40')
+				.input-box
+					text.field-labeled Verify Password
+					input.text-input(type='password' name='password' placeholder='********' maxLength='40')
+			button.login-button(type='button' onclick='register()') Register

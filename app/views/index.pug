@@ -1,6 +1,14 @@
 extends template
 
+block cssSheets
+  link(rel='stylesheet', href='/stylesheets/index.css')
+
 block content
-  h1= title
-  p Welcome to #{title}
-  p Hello
+  h1 Welcome
+  .welcome
+    p.login Hello from BTCWallet! Click&nbsp;
+      a(href='/login') here
+      | &nbsp;to login.
+    p.register Or, Click&nbsp;
+      a(href='/register') here
+      | &nbsp;to register.

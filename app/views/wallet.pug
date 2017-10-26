@@ -1,0 +1,21 @@
+extends template
+
+
+block cssSheets
+	link(rel='stylesheet', href='/stylesheets/login.css')
+
+
+block content
+	script(src='/js/script.js')
+	.outerBox
+	button.logout-button(type='button' onclick='logout()') Logout
+
+	form.wallet-form#wallet-form
+		.inputs
+			h1 50 BTC
+			.input-row
+				button.submit-button(type='button' onclick='send()') Send
+				button.receive-button(type='button' onclick='receive()') Receive
+	
+
+

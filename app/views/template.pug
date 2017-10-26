@@ -1,9 +1,15 @@
 doctype html
 html
   head
+    //- general info and configuration
+    meta(name='viewport', content='width=device-width', initial-scale='1')
+    base(href='/')
+    title= 'btc-wallet' + (title ? ' - ' + title : '')
+
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/js/fetch.js')
+    block cssSheets
   body
     block content
     if dev

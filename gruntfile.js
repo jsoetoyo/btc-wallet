@@ -6,7 +6,11 @@ module.exports = function(grunt) {
             compile: {
                 options: {},
                 files: {
-                    'public/stylesheets/style.css': 'app/stylesheets/style.styl'
+                    'public/stylesheets/style.css': 'app/stylesheets/style.styl',
+                    'public/stylesheets/index.css': 'app/stylesheets/index.styl',
+                    'public/stylesheets/wallet.css': 'app/stylesheets/wallet.styl',
+                    'public/stylesheets/login.css': 'app/stylesheets/login.styl',
+                    'public/stylesheets/receive.css': 'app/stylesheets/receive.styl'
                 }
             }
         },
