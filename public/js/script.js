@@ -59,4 +59,19 @@ function send(){
 
 function receive(){
 	location.href = "/receive";
+	
+	var userToken = ""; //Empty string until I figure out how to store token in cookies
+	
+	var data = {
+		token: userToken
+	};
+
+	fetch('/receive', {
+	    method: 'POST';
+	    body: JSON.stringify(data),
+	}).then(function(res) {
+	    if(!res.ok) console.log('error1');
+	}).catch(function(err){
+	    console.log("error2")
+	});
 }

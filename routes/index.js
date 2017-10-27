@@ -51,4 +51,15 @@ router.post('/register', function(req, res, next) {
   res.render('/register', {title: 'Register'});
 });
 
+//Get Wallet address
+router.post('/receive', function(req, res, next) {
+  request.post({
+    //Note for Akshitha: Not really sure if I can directly access object here. Probably not.
+    //wallet-id is placeholder until i figure out how to access id's from specific wallets.
+    url: '/wallets/'.concat('wallet-id').concat('/address'),
+    body: req.body
+  }).pipe(res);
+  res.render('/register', {title: 'Register'});
+});
+
 module.exports = router;
