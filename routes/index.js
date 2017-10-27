@@ -13,7 +13,6 @@ router.post('/login', function(req, res, next) {
     url: '/auth/token',
     body: req.body
   }).pipe(res);
-  res.render('/login', {title: 'Login'});
 });
 
 router.get('/login', function(req, res, next) {
@@ -23,11 +22,12 @@ router.get('/login', function(req, res, next) {
 
 //Getting Wallets
 router.get('/wallet', function(req, res, next) {
-	request.get({
+  request.get({
     url: '/wallets',
-    body: req.body
-  }).pipe(res);
-  res.render('wallet', {title: 'Wallet'});
+  },
+  function(error, response, body) {
+    res.render('wallet', { events: JSON.parse(body) });
+  });
 });
 
 router.get('/send', function(req, res, next) {
