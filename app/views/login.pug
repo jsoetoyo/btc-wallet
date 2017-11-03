@@ -7,12 +7,17 @@ block content
 	script(src='/js/script.js')
 	.outerBox
 	form.login-form#login-form
+		.heading
+			h1 
+				div Masuk 
+				div Pintu
 		.inputs
 			.input-row
 				.input-box
-					text.field-labeled Username
 					input.text-input(type='text' name='username' placeholder='Username' maxlenth='20')
 				.input-box
-					text.field-labeled Password
 					input.text-input(type='password' name='password' placeholder='********' maxLength='40')
-			button.login-button(type='button' onclick='login()') Login
+		.forgot
+			p Forgot Password?
+		script(src='/js/script.js')
+		button.login-button(type='button' onclick='login()') Login

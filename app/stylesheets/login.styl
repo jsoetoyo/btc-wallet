@@ -1,30 +1,50 @@
 @require "helpers"
 
 html
-  background #D74C59
+  background #FFFFFF
 
-.inputs
+.login-form
   text-align center
-  background: #C22736
-  color: #FAA4AD
+  color: #01af9e 
   width: 50%
   transform translate(-50%, -50%)
   position absolute
   top 50%
   left 50%
-  padding 10px
   overflow auto
 
-button
-  background-color #98121E 
+.heading
   border none
-  color #F77985
-  padding 15px 32px
+
+.inputs
+  border none
+  padding-bottom 10px
+
+.text-input
+  padding 10px
+  border none
+  border-bottom  solid 2px #c9c9c9
+  transition border 0.3s
+  width 40%
+
+.text-input:focus
+  border-bottom: solid 2px #01af9e 
+  outline none
+
+.forgot
+  font-size 8px
+  text-align right 40%
+button
+  background-color #01af9e 
+  border none
+  color #FFFFFF
+  padding 8px 20px
   text-align center
   text-decoration none
   display inline-block
   font-size 16px
   margin 4px
+  border-radius 8px
 
-text.field-labeled
-  padding 20px
+button:focus
+  outline none
