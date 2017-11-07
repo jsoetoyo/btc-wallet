@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+const config = require('../app/models/config');
 const request = require('request');
 
 router.get('/', function(req, res, next) {
@@ -10,8 +11,8 @@ router.get('/', function(req, res, next) {
 //Logging in
 router.post('/login', function(req, res, next) {
   request.post({
-    url: '/auth/token',
-    body: req.body
+    url: config.apiUrl + '/auth/token',
+    json: req.body
   }).pipe(res);
 });
 
@@ -23,11 +24,10 @@ router.get('/login', function(req, res, next) {
 //Getting Wallets
 router.get('/wallet', function(req, res, next) {
   request.get({
-    url: '/wallets',
-  },
-  function(error, response, body) {
-    res.render('wallet', { events: JSON.parse(body) });
-  });
+    url: config.apiUrl + '/wallets',
+    json: req.body
+  }).pipe(res);
+  res.render('wallet', {title: 'Wallets'});
 });
 
 router.get('/send', function(req, res, next) {
@@ -44,11 +44,11 @@ router.get('/register', function(req, res, next) {
 
 //Creating a new user
 router.post('/register', function(req, res, next) {
+  //CORRECT WAY OF DOING POSTS
   request.post({
-    url: '/users',
-    body: req.body
+    url: config.apiUrl + '/users',
+    json: req.body
   }).pipe(res);
-  res.render('/register', {title: 'Register'});
 });
 
 //Get Wallet address
@@ -56,7 +56,7 @@ router.post('/receive', function(req, res, next) {
   request.post({
     //Note for Akshitha: Not really sure if I can directly access object here. Probably not.
     //wallet-id is placeholder until i figure out how to access id's from specific wallets.
-    url: '/wallets/'.concat('wallet-id').concat('/address'),
+    url:  config.apiUrl + '/wallets/'.concat('wallet-id').concat('/address'),
     body: req.body
   }).pipe(res);
   res.render('/register', {title: 'Register'});

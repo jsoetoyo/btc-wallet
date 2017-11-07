@@ -2,20 +2,58 @@ extends template
 
 
 block cssSheets
-	link(rel='stylesheet', href='/stylesheets/login.css')
+    script(src='/js/script.min.js')
+    link(rel='stylesheet', href='/stylesheets/wallet.css')
+
 
 
 block content
-	script(src='/js/script.js')
-	.outerBox
-	button.logout-button(type='button' onclick='logout()') Logout
+    script(src='/js/script.js')
+    script.
+        window.onload = function() {
+            generateWallets();
+        }    
 
-	form.wallet-form#wallet-form
-		.inputs
-			h1 50 BTC
-			.input-row
-				button.submit-button(type='button' onclick='send()') Send
-				button.receive-button(type='button' onclick='receive()') Receive
-	
+    .navBar
+        a(href='/wallet')
+            img(src="images/pintu.png" class="pintuLogo").logo
+        a(href='/login')
+            button.logout-button(type='button' onclick='logout()') Logout
 
+    form.wallet-form#wallet-form
+        #listOfWallets
 
+        #send.modal
+            form.send-form#send-form
+                h1 Send Bitcoins
+                .inputs
+                    .input-row
+                        input.text-input(type='text' placeholder='Target')
+                    .input-row
+                        input.text-input(type='number' placeholder='0')
+                    .input-row
+                        button.submit-button(type='button' onclick='send()') Send
+                        button.close-button(type='button' onclick='closeSendModal(this)') Close
+        #receive.modal
+            form.send-form#receive-form
+                h1 Receive Bitcoins
+                    .address
+                        img(src='/images/DEV_qr.jpg')
+                .input-row
+                    p Address:
+                .input-row
+                    button.close-button(type='button' onclick='closeReceiveModal(this)') Close
+
+    script.
+        function closeSendModal(ele) {
+            document.getElementById('send').style.display = 'none'
+        }
+        function displaySendModal(ele) {
+            document.getElementById('send').style.display = 'block'
+        }
+        function closeReceiveModal(ele) {
+            document.getElementById('receive').style.display = 'none'
+        }
+        function displayReceiveModal(ele) {
+            document.getElementById('receive').style.display = 'block'
+        }
