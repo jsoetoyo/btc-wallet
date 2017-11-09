@@ -2,17 +2,17 @@ extends template
 
 
 block cssSheets
-    script(src='/js/script.min.js')
-    link(rel='stylesheet', href='/stylesheets/wallet.css')
-
-
-
-block content
     script(src='/js/script.js')
+    link(rel='stylesheet', href='/stylesheets/wallet.css')
     script.
         window.onload = function() {
             generateWallets();
         }    
+
+
+block content
+    script(src='/js/script.js')
+    
 
     .navBar
         a(href='/wallet')
@@ -28,12 +28,12 @@ block content
                 h1 Send Bitcoins
                 .inputs
                     .input-row
-                        input.text-input(type='text' placeholder='Target')
+                        input.text-input#target-address(type='text' placeholder='Target')
                     .input-row
-                        input.text-input(type='number' placeholder='0')
+                        input.text-input#send-amount(type='number' placeholder='0')
                     .input-row
-                        button.submit-button(type='button' onclick='send()') Send
-                        button.close-button(type='button' onclick='closeSendModal(this)') Close
+                        button.submit-button-send#send-button(type='button' onclick='send()') Send
+                        button.close-button-send(type='button' onclick='closeSendModal()') Close
         #receive.modal
             form.send-form#receive-form
                 h1 Receive Bitcoins
@@ -42,18 +42,28 @@ block content
                 .input-row
                     p Address:
                 .input-row
-                    button.close-button(type='button' onclick='closeReceiveModal(this)') Close
+                    button.close-button-receive(type='button' onclick='closeReceiveModal(this)') Close
 
     script.
+        function send(){
+            walletId = "Hardcode"
+            let target = document.getElementById('target-address').value
+            let amount = document.getElementById('send-amount').value
+            sendTransaction(walletId, target, amount)
+        }
         function closeSendModal(ele) {
             document.getElementById('send').style.display = 'none'
         }
-        function displaySendModal(ele) {
-            document.getElementById('send').style.display = 'block'
+
+        function displaySendModal(ele, walletId) {
+            console.log("HERE")
+            //document.getElementById('send').style.display = 'block'
+            ele.style.display = 'block'
+            document.getElementById('send-button').value = walletId
         }
         function closeReceiveModal(ele) {
             document.getElementById('receive').style.display = 'none'
         }
-        function displayReceiveModal(ele) {
+        function displayReceiveModal(ele, walletAddress) {
             document.getElementById('receive').style.display = 'block'
         }

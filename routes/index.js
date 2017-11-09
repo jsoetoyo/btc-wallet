@@ -21,17 +21,25 @@ router.get('/login', function(req, res, next) {
 });
 
 
-//Getting Wallets
+//Getting Wallet page
 router.get('/wallet', function(req, res, next) {
-  request.get({
-    url: config.apiUrl + '/wallets',
-    json: req.body
-  }).pipe(res);
   res.render('wallet', {title: 'Wallets'});
 });
 
-router.get('/send', function(req, res, next) {
-	res.render('send', {title: "Send"});
+//Getting Wallets
+router.get('/walletsBackend', function(req, res, next) {
+  request.get({
+      url: config.apiUrl + '/wallets',
+      headers: {'x-access-token': req.headers['x-access-token']}
+   }).pipe(res);
+})
+
+//
+router.post('/send/:walletid', function(req, res, next) {
+  request.post({
+    url: config.apiUrl + '/wallet/' + req.params.walletid + '/transaction',
+    json: req.body
+  }).pipe(res);
 });
 
 router.get('/receive', function(req, res, next) {

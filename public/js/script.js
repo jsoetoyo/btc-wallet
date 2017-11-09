@@ -25,7 +25,7 @@ function login(){
     	{
 			return res.json().then(function(result) {
 				setCookie('token', result.token, 2);
-				window.location = '/wallet';
+				location.href("/wallet");
      		});
 
     	}
@@ -78,8 +78,26 @@ function logout(){
 	eraseCookie("token");
 }
 
-function send(){
-	location.href = "/send";
+function sendTransaction(walletID, targetAddress, amount){
+
+	var data = {
+		address: targetAddress,
+		amount: amount,
+		currency: 'BTC'
+	};
+
+	fetch('/send/' + walletID, {
+	    method: 'POST',
+	    headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+		},
+	    body: JSON.stringify(data)
+	}).then(function(res) {
+	    if(!res.ok) console.log('i hit backend');
+	}).catch(function(err){
+	    console.log("error2")
+	});
 }
 
 function receive(){
@@ -123,8 +141,31 @@ function eraseCookie(name) {
     createCookie(name,"",-1);
 }
 
+function getWalletAddress(walletId){
+	console.log("YOOOOO")
+	fetch('/walletAddress/' + walletId, {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json, text/plain, */*',
+			'Content-Type': 'application/json',
+			'x-access-token': readCookie('token')
+		}
+	}).then(function(res) {
+		if (!res.ok) {
+			console.log('did not correctly recieve wallet address given wallet id');
+		}
+		else
+		{
+			return res.json().then(function() {
+				console.log("MADE IT")
+				return result.address;
+			});
+		}
+	});
+}
+
 function generateWallets() {
-	fetch('/wallet', {
+	fetch('/walletsBackend', {
 	    method: 'GET',
 	    headers: {
 				'Accept': 'application/json, text/plain, */*',
@@ -138,18 +179,19 @@ function generateWallets() {
     	else
     	{
 			return res.json().then(function(result) {
-				var walletContainer = '<div class="wallets">'
+				var walletContainer = '<div class="wallet">'
 
 			    for (var i = 0; i < result.wallets.length; i++){
-			        walletContainer += '<h1>' + result.wallets[i].balance + result.wallets[i].currency +  '</h1>'
+			    	let walletAddress = getWalletAddress(result.wallets[i].id)
+			        walletContainer += '<h1>' + result.wallets[i].balance + ' ' + result.wallets[i].currency +  '</h1>'
 			        walletContainer += '<div class="input-row">'
-			        walletContainer += '<button id="submit-button" onclick="displaySendModal(this)"> Send </button>'
-			        walletContainer += '<button id="receive-button" onclick="displayReceiveModal()"> Receive </button>'
+			        walletContainer += '<button id="submit-button" onclick="displaySendModal(this,' + result.wallets[i].id +')"> Send </button>'
+			        walletContainer += '<button id="receive-button" onclick="displayReceiveModal(this,' + walletAddress + ')"> Receive </button>'
 			        walletContainer += '</div>'
 			    }
 
 			    walletContainer += '</div>'
-			    document.getElementById('listOfWallets').appendChild(walletContainer)
+			    document.getElementById('listOfWallets').innerHTML = walletContainer
 
      		});
 
