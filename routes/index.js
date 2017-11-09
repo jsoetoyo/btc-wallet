@@ -26,7 +26,7 @@ router.get('/wallet', function(req, res, next) {
   res.render('wallet', {title: 'Wallets'});
 });
 
-//Getting Wallets
+//Getting Wallet id's
 router.get('/walletsBackend', function(req, res, next) {
   request.get({
       url: config.apiUrl + '/wallets',
@@ -34,7 +34,15 @@ router.get('/walletsBackend', function(req, res, next) {
    }).pipe(res);
 })
 
-//
+//Getting a wallet address from its id
+router.post('/walletAddress/:walletid', function(req, res, next){
+  request.post({
+      url: config.apiUrl + '/wallets/' + req.params.walletid + '/address',
+      json: req.body
+  }).pipe(res);
+})
+
+//Sending value from a wallet to another wallet
 router.post('/send/:walletid', function(req, res, next) {
   request.post({
     url: config.apiUrl + '/wallet/' + req.params.walletid + '/transaction',
