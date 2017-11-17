@@ -26,6 +26,18 @@ router.get('/wallet', function(req, res, next) {
   res.render('wallet', {title: 'Wallets'});
 });
 
+//Getting Transactions page
+router.get('/transactions', function(req, res, next) {
+  res.render('transactions', {title: 'Transactions'});
+});
+
+//Responding with the Backend call for all transactions
+router.get('/transactionsBackend/:walletid', function(req, res, next) {
+  request.get({
+    url: config.apiUrl + '/wallets/' + req.params.walletid + '/transaction'
+  }).pipe(res);
+});
+
 //Getting Wallet id's
 router.get('/walletsBackend', function(req, res, next) {
   request.get({

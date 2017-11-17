@@ -142,7 +142,6 @@ function eraseCookie(name) {
 }
 
 function getWalletAddress(walletId){
-	console.log("YOOOOO")
 	fetch('/walletAddress/' + walletId, {
 		method: 'POST',
 		headers: {
@@ -191,11 +190,42 @@ function generateWallets() {
 			    }
 
 			    walletContainer += '</div>'
-			    document.getElementById('listOfWallets').innerHTML = walletContainer
+			    document.getElementById('listOfWallets').innerHTML = walletContainer;
 
      		});
 
     	}
   	});
 
+}
+
+function generateTransactions(walletId) {
+
+	fetch('/transactionsBackend/' + walletId , {
+	    method: 'GET',
+	    headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+		}
+	}).then(function(res) {
+    	if (!res.ok) {
+    		console.log('error1');
+    	} 
+    	else
+    	{
+			return res.json().then(function(result) {
+				var transactionContainer = '<div class="transaction">'
+
+			    for (var i = 0; i < result.length; i++){
+			    	// The date of the transaction is not stored currently, can't do anything about that.
+			        transactionContainer += '<h1> Bought ' + result[i].unit + ' </h1>';
+			        transactionContainer += '<h1> Amount: ' + result[i].amount + '</h1>';
+			    }
+
+			    transactionContainer += '</div>'
+			    document.getElementById('listOfTransactions').innerHTML = transactionContainer;
+     		});
+
+    	}
+  	});
 }
