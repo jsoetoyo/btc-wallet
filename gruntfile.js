@@ -10,7 +10,8 @@ module.exports = function(grunt) {
                     'public/stylesheets/index.css': 'app/stylesheets/index.styl',
                     'public/stylesheets/wallet.css': 'app/stylesheets/wallet.styl',
                     'public/stylesheets/login.css': 'app/stylesheets/login.styl',
-                    'public/stylesheets/receive.css': 'app/stylesheets/receive.styl'
+                    'public/stylesheets/receive.css': 'app/stylesheets/receive.styl',
+                    'public/stylesheets/register.css': 'app/stylesheets/register.styl'
                 }
             }
         },
