@@ -34,7 +34,8 @@ router.get('/transactions', function(req, res, next) {
 //Responding with the Backend call for all transactions
 router.get('/transactionsBackend/:walletid', function(req, res, next) {
   request.get({
-    url: config.apiUrl + '/wallets/' + req.params.walletid + '/transaction'
+    url: config.apiUrl + '/wallets/' + req.params.walletid + '/transaction',
+    headers: {'x-access-token': req.headers['x-access-token']}
   }).pipe(res);
 });
 
@@ -72,7 +73,6 @@ router.get('/register', function(req, res, next) {
 
 //Creating a new user
 router.post('/register', function(req, res, next) {
-  //CORRECT WAY OF DOING POSTS
   request.post({
     url: config.apiUrl + '/users',
     json: req.body
@@ -82,8 +82,6 @@ router.post('/register', function(req, res, next) {
 //Get Wallet address
 router.post('/receive', function(req, res, next) {
   request.post({
-    //Note for Akshitha: Not really sure if I can directly access object here. Probably not.
-    //wallet-id is placeholder until i figure out how to access id's from specific wallets.
     url:  config.apiUrl + '/wallets/'.concat('wallet-id').concat('/address'),
     body: req.body
   }).pipe(res);

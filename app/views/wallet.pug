@@ -19,6 +19,8 @@ block content
             img(src="images/pintu.png" class="pintuLogo").logo
         a(href='/login')
             button.logout-button(type='button' onclick='logout()') Logout
+        a(href='/transactions')
+            button.logout-button(type='button' onclick='logout()') Transactions
 
     form.wallet-form#wallet-form
         #listOfWallets
@@ -37,33 +39,47 @@ block content
         #receive.modal
             form.send-form#receive-form
                 h1 Receive Bitcoins
-                    .address
-                        img(src='/images/DEV_qr.jpg')
                 .input-row
-                    p Address:
+                    p#walletAddressYes
                 .input-row
-                    button.close-button-receive(type='button' onclick='closeReceiveModal(this)') Close
+                    .divButton.close-button-receive(type='button' onclick='closeReceiveModal(this)') Close
+
+        #successSend.modal
+            form.send-form#receive-form
+                h1 Bitcoins successfully sent!
+                .input-row
+                    .divButton.close-button-sendSuccess(type='button' onclick='closeSuccessModal()') Close
+
+        #failSend.modal
+            form.send-form#receive-form
+                p Insufficient Funds. Transaction Failed.
+                .input-row
+                    .divButton.close-button-sendFail(type='button' onclick='closeFailModal()') Close
 
     script.
-        function send(){
-            walletId = "Hardcode"
-            let target = document.getElementById('target-address').value
-            let amount = document.getElementById('send-amount').value
-            sendTransaction(walletId, target, amount)
-        }
-        function closeSendModal(ele) {
-            document.getElementById('send').style.display = 'none'
-        }
+      function send() {
+          walletId = localStorage.walletId
+          let target = document.getElementById('target-address').value
+          let amount = document.getElementById('send-amount').value
+        sendTransaction(walletId, target, amount)
+      }
+      function closeSendModal() {
+        document.getElementById('send').style.display = 'none'
+      }
 
-        function displaySendModal(ele, walletId) {
-            console.log("HERE")
-            //document.getElementById('send').style.display = 'block'
-            ele.style.display = 'block'
-            document.getElementById('send-button').value = walletId
-        }
-        function closeReceiveModal(ele) {
-            document.getElementById('receive').style.display = 'none'
-        }
-        function displayReceiveModal(ele, walletAddress) {
-            document.getElementById('receive').style.display = 'block'
-        }
+      function displaySendModal() {
+        document.getElementById('send').style.display = 'block'
+      }
+      function closeReceiveModal() {
+        document.getElementById("receive").style.display = 'none'
+      }
+      function closeSuccessModal() {
+        document.getElementById("successSend").style.display = 'none'
+      }
+      function closeFailModal() {
+        document.getElementById("failSend").style.display = 'none'
+      }
+      function displayReceiveModal() {
+        document.getElementById("receive").style.display = 'block'
+        document.getElementById("walletAddressYes").innerHTML = "Address: "+ localStorage.walletAddress
+      }

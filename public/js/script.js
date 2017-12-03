@@ -24,13 +24,13 @@ function login(){
     	else
     	{
 			return res.json().then(function(result) {
-				setCookie('token', result.token, 2);
-				location.href("/wallet");
+          setCookie('token', result.token, 2);
+          location.href = "/wallet";
      		});
 
     	}
   	}).catch(function(err){
-    	console.log("error2");
+    	console.log(err);
   	});
 }
 
@@ -91,10 +91,17 @@ function sendTransaction(walletID, targetAddress, amount){
 	    headers: {
 				'Accept': 'application/json, text/plain, */*',
 				'Content-Type': 'application/json'
-		},
+		  },
 	    body: JSON.stringify(data)
 	}).then(function(res) {
-	    if(!res.ok) console.log('i hit backend');
+	    if(!res.ok) {
+	      closeSendModal()
+        document.getElementById("failSend").style.display = 'block'
+      }
+      else {
+        closeSendModal()
+        document.getElementById("successSend").style.display = 'block'
+      };
 	}).catch(function(err){
 	    console.log("error2")
 	});
@@ -103,7 +110,7 @@ function sendTransaction(walletID, targetAddress, amount){
 function receive(){
 	location.href = "/receive";
 	
-	var userToken = ""; //Empty string until I figure out how to store token in cookies
+	var userToken = readCookie('token');
 	
 	var data = {
 		token: userToken
@@ -141,27 +148,6 @@ function eraseCookie(name) {
     createCookie(name,"",-1);
 }
 
-function getWalletAddress(walletId){
-	fetch('/walletAddress/' + walletId, {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json, text/plain, */*',
-			'Content-Type': 'application/json',
-			'x-access-token': readCookie('token')
-		}
-	}).then(function(res) {
-		if (!res.ok) {
-			console.log('did not correctly recieve wallet address given wallet id');
-		}
-		else
-		{
-			return res.json().then(function() {
-				console.log("MADE IT")
-				return result.address;
-			});
-		}
-	});
-}
 
 function generateWallets() {
 	fetch('/walletsBackend', {
@@ -178,19 +164,46 @@ function generateWallets() {
     	else
     	{
 			return res.json().then(function(result) {
-				var walletContainer = '<div class="wallet">'
+        var walletContainer = '<div class="wallet">'
 
-			    for (var i = 0; i < result.wallets.length; i++){
-			    	let walletAddress = getWalletAddress(result.wallets[i].id)
-			        walletContainer += '<h1>' + result.wallets[i].balance + ' ' + result.wallets[i].currency +  '</h1>'
-			        walletContainer += '<div class="input-row">'
-			        walletContainer += '<button id="submit-button" onclick="displaySendModal(this,' + result.wallets[i].id +')"> Send </button>'
-			        walletContainer += '<button id="receive-button" onclick="displayReceiveModal(this,' + walletAddress + ')"> Receive </button>'
-			        walletContainer += '</div>'
-			    }
+        var count = 0;
 
-			    walletContainer += '</div>'
-			    document.getElementById('listOfWallets').innerHTML = walletContainer;
+        for (var i = 0; i < result.wallets.length; i++){
+          (function(x) {
+            var tokenInfo = {
+              "token": readCookie('token')
+            }
+            fetch('/walletAddress/' + result.wallets[i].id, {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                'x-access-token': readCookie('token')
+              },
+              body: JSON.stringify(tokenInfo)
+            }).then(function (res) {
+              if (!res.ok) {
+                console.log('did not correctly receive wallet address given wallet id');
+              }
+              else {
+                return res.json().then(function (data) {
+                  localStorage.walletAddress = data.address
+                  localStorage.walletId = result.wallets[x].id
+                  walletContainer += '<h1>' + result.wallets[x].balance + ' ' + result.wallets[x].currency + '</h1>' + '<div class="walletButtons">' + '<div id="submit-button" onclick="displaySendModal()"> Send </div>' + '<div class="receive-button" id="receive-button' + x + '" onclick="displayReceiveModal();"> Receive </div>' + '</div>';
+
+                  count++;
+
+                  if (count === result.wallets.length) {
+                    walletContainer += '</div>'
+                    document.getElementById('listOfWallets').innerHTML = walletContainer
+                  }
+                })
+
+
+              }
+            });
+          }(i))
+        }
 
      		});
 
@@ -201,31 +214,63 @@ function generateWallets() {
 
 function generateTransactions(walletId) {
 
-	fetch('/transactionsBackend/' + walletId , {
+  var token = readCookie('token')
+
+	fetch('/transactionsBackend/' + localStorage.walletId , {
 	    method: 'GET',
 	    headers: {
 				'Accept': 'application/json, text/plain, */*',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+        'x-access-token': token
 		}
 	}).then(function(res) {
     	if (!res.ok) {
-    		console.log('error1');
-    	} 
+    		console.log('error transactions');
+    	}
     	else
     	{
 			return res.json().then(function(result) {
-				var transactionContainer = '<div class="transaction">'
+        var transactionContainer = '<div class="transaction">'
 
-			    for (var i = 0; i < result.length; i++){
-			    	// The date of the transaction is not stored currently, can't do anything about that.
-			        transactionContainer += '<h1> Bought ' + result[i].unit + ' </h1>';
-			        transactionContainer += '<h1> Amount: ' + result[i].amount + '</h1>';
-			    }
+        transactionContainer += '<h1>Incoming Transactions</h1>'
+        if (result.incoming_txs.length == 0){
+          transactionContainer += '<div class="wallet">'
+          transactionContainer += '<h2> No Incoming Transactions </h2>';
+          transactionContainer += '</div>'
+        }
+        else {
+          for (var i = 0; i < result.incoming_txs.length; i++){
+            transactionContainer += '<div class="wallet">'
+            transactionContainer += '<h2> Bought ' + result.incoming_txs[i].unit + ' </h2>';
+            transactionContainer += '<h2> Amount: ' + result.incoming_txs[i].amount + '</h2>';
+            transactionContainer += '<h2> From: ' + result.incoming_txs[i].from + '</h2>';
+            transactionContainer += '</div>'
+          }
+        }
 
-			    transactionContainer += '</div>'
-			    document.getElementById('listOfTransactions').innerHTML = transactionContainer;
+        transactionContainer += '<h1>Outgoing Transactions</h1>'
+        if (result.outgoing_txs.length == 0){
+          transactionContainer += '<div class="wallet">'
+          transactionContainer += '<h2> No Incoming Transactions </h2>';
+          transactionContainer += '</div>'
+        }
+        else{
+          for (var i = 0; i < result.outgoing_txs.length; i++){
+            transactionContainer += '<div class="wallet">'
+            transactionContainer += '<h2> Bought ' + result.outgoing_txs[i].unit + ' </h2>';
+            transactionContainer += '<h2> Amount: ' + result.outgoing_txs[i].amount + '</h2>';
+            transactionContainer += '<h2> To: ' + result.outgoing_txs[i].to + '</h2>';
+            transactionContainer += '</div>'
+          }
+        }
+
+
+        transactionContainer += '</div>'
+        document.getElementById('listOfTransactions').innerHTML = transactionContainer;
+
      		});
 
     	}
   	});
 }
+

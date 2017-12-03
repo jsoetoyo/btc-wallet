@@ -20,7 +20,8 @@ block content
             img(src="images/pintu.png" class="pintuLogo").logo
         a(href='/login')
             button.logout-button(type='button' onclick='logout()') Logout
+        a(href='/transactions')
+            button.logout-button(type='button' onclick='logout()') Transactions
 
-    #listOfTransactions
-
-       
+    form.wallet-form#wallet-form
+        #listOfTransactions
