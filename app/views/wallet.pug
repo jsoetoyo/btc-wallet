@@ -58,7 +58,7 @@ block content
 
     script.
       function send() {
-          walletId = localStorage.walletId
+          walletId = localStorage.currAddress
           let target = document.getElementById('target-address').value
           let amount = document.getElementById('send-amount').value
         sendTransaction(walletId, target, amount)
@@ -67,7 +67,8 @@ block content
         document.getElementById('send').style.display = 'none'
       }
 
-      function displaySendModal() {
+      function displaySendModal(address) {
+        localStorage.currAddress = address
         document.getElementById('send').style.display = 'block'
       }
       function closeReceiveModal() {
@@ -79,7 +80,7 @@ block content
       function closeFailModal() {
         document.getElementById("failSend").style.display = 'none'
       }
-      function displayReceiveModal() {
+      function displayReceiveModal(address) {
         document.getElementById("receive").style.display = 'block'
-        document.getElementById("walletAddressYes").innerHTML = "Address: "+ localStorage.walletAddress
+        document.getElementById("walletAddressYes").innerHTML = "Address: " + address
       }

@@ -187,9 +187,7 @@ function generateWallets() {
               }
               else {
                 return res.json().then(function (data) {
-                  localStorage.walletAddress = data.address
-                  localStorage.walletId = result.wallets[x].id
-                  walletContainer += '<h1>' + result.wallets[x].balance + ' ' + result.wallets[x].currency + '</h1>' + '<div class="walletButtons">' + '<div id="submit-button" onclick="displaySendModal()"> Send </div>' + '<div class="receive-button" id="receive-button' + x + '" onclick="displayReceiveModal();"> Receive </div>' + '</div>';
+                  walletContainer += '<h1>' + result.wallets[x].balance + ' ' + result.wallets[x].currency + '</h1>' + '<div class="walletButtons">' + '<div id="submit-button" onclick="displaySendModal(\''+data.address+'\')"> Send </div>' + '<div class="receive-button" id="receive-button' + x + '" onclick="displayReceiveModal(\''+ data.address +'\');"> Receive </div>' + '</div>';
 
                   count++;
 

@@ -6,6 +6,7 @@ block cssSheets
 block content
     script(src='/js/script.js')
     .outerBox
+    img(src="images/pintu.png" class="pintuLogo")
     form.login-form#login-form
         .heading
             h1 
@@ -16,6 +17,9 @@ block content
                     input.text-input(type='text' name='username' placeholder='Username' maxlenth='20')
                 .input-box
                     input.text-input(type='password' name='password' placeholder='********' maxLength='40')
+                a(href='/register')
+                    p.forgot Register
+
         script(src='/js/script.js')
             
         button.login-button(type='button' onclick='login()') Login
